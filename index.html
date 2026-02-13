@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine? ❤️</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: radial-gradient(circle, #fff0f3 0%, #ffccd5 100%);
+            font-family: 'Arial Rounded MT Bold', sans-serif;
+            overflow: hidden;
+        }
+
+        .card {
+            background: white;
+            padding: 50px;
+            border-radius: 40px;
+            box-shadow: 0 20px 50px rgba(255, 77, 109, 0.3);
+            text-align: center;
+            max-width: 400px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .pulse-heart {
+            font-size: 80px;
+            color: #ff4d6d;
+            animation: pulse 1s infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        h1 {
+            color: #d63384;
+            font-size: 28px;
+            margin-bottom: 40px;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            min-height: 60px;
+        }
+
+        button {
+            padding: 15px 35px;
+            font-size: 22px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        #yesBtn {
+            background: #ff4d6d;
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+        }
+
+        #noBtn {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: 2px solid #dee2e6;
+        }
+
+        .hidden { display: none; }
+
+        #successMessage h1 {
+            color: #ff4d6d;
+            font-size: 32px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div id="askContainer">
+            <div class="pulse-heart">❤️</div>
+            <h1>Will you be my Valentine?</h1>
+            <div class="btn-group">
+                <button id="yesBtn">YES!</button>
+                <button id="noBtn">No</button>
+            </div>
+        </div>
+
+        <div id="successMessage" class="hidden">
+            <div class="pulse-heart">💖</div>
+            <h1>YEEEES!!!!🥰</h1>
+            <p style="font-size: 18px; color: #d63384;"></p>
+        </div>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const askContainer = document.getElementById('askContainer');
+        const successMessage = document.getElementById('successMessage');
+
+        // Кнопка "No" убегает
+        function moveNoButton() {
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        }
+
+        noBtn.addEventListener('mouseover', moveNoButton);
+        noBtn.addEventListener('click', moveNoButton);
+
+        // Кнопка "Yes" - запуск фейерверка
+        yesBtn.addEventListener('click', () => {
+            askContainer.classList.add('hidden');
+            successMessage.classList.remove('hidden');
+
+            // Настройки фейерверка
+            const duration = 5 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                const particleCount = 50 * (timeLeft / duration);
+                
+                // Салют в двух точках экрана
+                confetti({
+                    ...defaults, 
+                    particleCount, 
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+                    colors: ['#ff4d6d', '#ff8fa3', '#ffccd5']
+                });
+                confetti({
+                    ...defaults, 
+                    particleCount, 
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+                    colors: ['#ff4d6d', '#ffb3c1', '#ffffff']
+                });
+            }, 250);
+        });
+    </script>
+</body>
+</html>
